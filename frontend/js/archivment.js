@@ -45,9 +45,20 @@ const downloadBtn = document.getElementById('downloadBtn');
 let audioBlob = null;
 
 // Get the base URL dynamically
-const baseUrl = window.location.hostname === 'localhost' 
+const baseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? 'http://localhost:3000'
-    : 'https://your-backend-url.com'; // Replace with your actual backend URL
+    : 'https://ninjacoder-backend.vercel.app'; // Replace with your actual backend URL
+
+// Function to check if backend is available
+async function checkBackendHealth() {
+    try {
+        const response = await fetch(`${baseUrl}/health`);
+        return response.ok;
+    } catch (error) {
+        console.error('Backend health check failed:', error);
+        return false;
+    }
+}
 
 function populateVoiceList() {
     const voices = speechSynthesis.getVoices();
@@ -89,27 +100,27 @@ convertBtn.addEventListener('click', async (e) => {
     }
 
     try {
+        // Check backend health first
+        const isBackendHealthy = await checkBackendHealth();
+        if (!isBackendHealthy) {
+            throw new Error('Backend service is not available');
+        }
+
         const selectedLang = voiceList.value;
         const response = await fetch(`${baseUrl}/generate-tts`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json',
+                'Accept': 'audio/mpeg'
+            },
             body: JSON.stringify({ text, lang: selectedLang })
         });
 
         if (!response.ok) {
-            const fallbackResponse = await fetch(`${baseUrl}/generate-tts`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ text, lang: 'en' })
-            });
-
-            if (!fallbackResponse.ok) throw new Error('TTS generation failed');
-
-            audioBlob = await fallbackResponse.blob();
-        } else {
-            audioBlob = await response.blob();
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
 
+        audioBlob = await response.blob();
         downloadBtn.classList.remove('hide');
         downloadBtn.classList.add('show');
 
@@ -119,7 +130,7 @@ convertBtn.addEventListener('click', async (e) => {
 
     } catch (error) {
         console.error('Error:', error);
-        alert('Failed to generate audio. Please check your internet connection and try again.');
+        alert('Failed to generate audio. Please check your internet connection and try again. If the problem persists, please try again later.');
     }
 });
 
