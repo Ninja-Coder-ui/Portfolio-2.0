@@ -1,71 +1,34 @@
-# Portfolio 2.0
+# Portfolio Website
 
 A modern, responsive portfolio website showcasing my skills, projects, and achievements. Built with HTML, CSS, and JavaScript, featuring a clean and professional design.
 
-## 🌐 Live Demo
-
-Visit the live portfolio at: [portfolio-2-0-psi.vercel.app](https://portfolio-2-0-psi.vercel.app)
-
-## 🚀 Features
+## 🌟 Features
 
 - Responsive design that works on all devices
 - Modern and clean UI/UX
+- Interactive sections for skills, projects, and achievements
 - Text-to-Speech functionality for accessibility
-- Interactive project showcase
-- Skills and achievements section
-- Contact form
 - Smooth scrolling and animations
 - Dark/Light mode support
+- Contact form integration
 
-## 🛠️ Tech Stack
+## 🛠️ Technologies Used
 
-- **Frontend:**
-  - HTML5
-  - CSS3
-  - JavaScript (ES6+)
-  - Responsive Design
+- HTML5
+- CSS3
+- JavaScript
+- Node.js (Backend)
+- Express.js
+- GitHub Pages (Deployment)
 
-- **Backend:**
-  - Node.js
-  - Express.js
-  - Text-to-Speech API integration
+## 🚀 Live Demo
 
-## 📦 Installation
+Visit the live portfolio at: [https://ninja-coder-ui.github.io/Portfolio-2.0/](https://ninja-coder-ui.github.io/Portfolio-2.0/)
 
-1. Clone the repository:
-```bash
-git clone https://github.com/Ninja-Coder-ui/Portfolio-2.0.git
-```
-
-2. Navigate to the project directory:
-```bash
-cd Portfolio-2.0
-```
-
-3. Install dependencies:
-```bash
-# Install backend dependencies
-cd backend
-npm install
-
-# Install frontend dependencies
-cd ../frontend
-npm install
-```
-
-4. Start the development server:
-```bash
-# Start backend server
-cd backend
-npm run dev
-
-# The frontend will be served at http://localhost:3000
-```
-
-## 🏗️ Project Structure
+## 📁 Project Structure
 
 ```
-Portfolio-2.0/
+Portfolio4/
 ├── frontend/
 │   ├── css/
 │   ├── js/
@@ -80,35 +43,52 @@ Portfolio-2.0/
         └── deploy.yml
 ```
 
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js (v14 or higher)
+- npm or yarn package manager
+
+### Installation
+
+1. Clone the repository
+```bash
+git clone https://github.com/Ninja-Coder-ui/Portfolio-2.0.git
+cd Portfolio-2.0
+```
+
+2. Install backend dependencies
+```bash
+cd backend
+npm install
+```
+
+3. Start the backend server
+```bash
+npm run dev
+```
+
+4. Open `frontend/index.html` in your browser or use a local server
+
 ## 🔧 Configuration
 
-The project uses environment variables for configuration. Create a `.env` file in the backend directory with the following variables:
-
-```env
-PORT=3000
-```
+The portfolio can be customized by:
+- Modifying the content in `frontend/index.html`
+- Updating styles in `frontend/css/`
+- Adding new features in `frontend/js/`
+- Updating images in `frontend/img/`
 
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
 ## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 👤 Author
+## 📧 Contact
 
-Ninja Coder UI
-- GitHub: [@Ninja-Coder-ui](https://github.com/Ninja-Coder-ui)
+Your Name - [@your_twitter](https://twitter.com/your_twitter) - email@example.com
 
-## 🙏 Acknowledgments
-
-- Icons from [Font Awesome](https://fontawesome.com/)
-- Images from [Unsplash](https://unsplash.com/)
-- Text-to-Speech functionality powered by Google Text-to-Speech API 
+Project Link: [https://github.com/Ninja-Coder-ui/Portfolio-2.0](https://github.com/Ninja-Coder-ui/Portfolio-2.0) 
