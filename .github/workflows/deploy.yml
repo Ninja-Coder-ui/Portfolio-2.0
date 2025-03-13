@@ -4,54 +4,30 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch:
 
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Force all jobs to run in sequence
-concurrency:
-  group: "pages"
-  cancel-in-progress: true
-
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Clean workspace
-        run: |
-          rm -rf _site
-          rm -rf .jekyll-cache
-          
-      - name: Create clean deployment
-        run: |
-          # Create deployment directory
-          mkdir -p _site
-          # Copy only frontend files, excluding node_modules
-          cp -r frontend/index.html frontend/css frontend/js frontend/img frontend/doc frontend/Achievements _site/
-          # Ensure .nojekyll exists
-          touch _site/.nojekyll
-          # List contents for verification
-          echo "Deployment contents:"
-          ls -la _site/
-          
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: _site
-          
   deploy:
-    needs: build
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: './frontend'
+
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4 
+        uses: actions/deploy-pages@v2 
