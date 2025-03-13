@@ -26,16 +26,20 @@ jobs:
       - name: Prepare deployment
         run: |
           # Create a clean deployment directory
+          rm -rf _site
           mkdir -p _site
-          # Copy frontend files to _site
-          cp -r frontend/* _site/
-          # Ensure index.html is at the root
-          cp _site/index.html _site/
+          # Copy index.html directly to root of _site
+          cp frontend/index.html _site/
+          # Copy other frontend files to subdirectory
+          mkdir -p _site/frontend
+          cp -r frontend/* _site/frontend/
           # Create .nojekyll file
           touch _site/.nojekyll
           # List contents for verification
           echo "Deployment contents:"
           ls -la _site/
+          echo "\nRoot index.html contents:"
+          head -n 5 _site/index.html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
