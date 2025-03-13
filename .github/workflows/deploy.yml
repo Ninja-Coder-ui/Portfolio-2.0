@@ -25,21 +25,26 @@ jobs:
 
       - name: Prepare deployment
         run: |
-          # Create a clean deployment directory
+          # Remove existing _site directory if it exists
           rm -rf _site
+          # Create new _site directory
           mkdir -p _site
-          # Copy index.html directly to root of _site
-          cp frontend/index.html _site/
-          # Copy other frontend files to subdirectory
-          mkdir -p _site/frontend
-          cp -r frontend/* _site/frontend/
-          # Create .nojekyll file
+          # Copy all frontend files directly to _site (root level)
+          cp -r frontend/* _site/
+          # Ensure .nojekyll exists
           touch _site/.nojekyll
-          # List contents for verification
+          # Verify deployment contents
           echo "Deployment contents:"
           ls -la _site/
-          echo "\nRoot index.html contents:"
-          head -n 5 _site/index.html
+          echo "\nVerifying index.html exists:"
+          if [ -f "_site/index.html" ]; then
+            echo "index.html found at root level"
+            echo "First few lines of index.html:"
+            head -n 5 _site/index.html
+          else
+            echo "ERROR: index.html not found at root level!"
+            exit 1
+          fi
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
