@@ -47,7 +47,15 @@ let audioBlob = null;
 function populateVoiceList() {
     const voices = speechSynthesis.getVoices();
     voiceList.innerHTML = '';
-    voices.forEach((voice, i) => {
+    
+    // Add default English option first
+    const defaultOption = document.createElement('option');
+    defaultOption.textContent = 'English (en-US)';
+    defaultOption.value = 'en-US';
+    voiceList.appendChild(defaultOption);
+
+    // Add other voices
+    voices.forEach((voice) => {
         const option = document.createElement('option');
         option.textContent = `${voice.name} (${voice.lang})`;
         option.value = voice.lang;
@@ -55,9 +63,16 @@ function populateVoiceList() {
     });
 }
 
-if (speechSynthesis.onvoiceschanged !== undefined) {
+// Handle voice loading for different browsers
+if (typeof speechSynthesis !== 'undefined' && speechSynthesis.onvoiceschanged !== undefined) {
     speechSynthesis.onvoiceschanged = populateVoiceList;
+} else {
+    // Fallback for browsers that don't support onvoiceschanged
+    populateVoiceList();
 }
+
+// Add a timeout to ensure voices are loaded
+setTimeout(populateVoiceList, 1000);
 
 convertBtn.addEventListener('click', async (e) => {
     e.preventDefault();
