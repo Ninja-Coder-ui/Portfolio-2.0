@@ -23,15 +23,24 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
-      - name: Copy frontend files to root
+      - name: Prepare deployment
         run: |
-          cp -r frontend/* .
-          ls -la
+          # Create a clean deployment directory
+          mkdir -p _site
+          # Copy frontend files to _site
+          cp -r frontend/* _site/
+          # Ensure index.html is at the root
+          cp _site/index.html _site/
+          # Create .nojekyll file
+          touch _site/.nojekyll
+          # List contents for verification
+          echo "Deployment contents:"
+          ls -la _site/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
+          path: '_site'
 
       - name: Deploy to GitHub Pages
         id: deployment
