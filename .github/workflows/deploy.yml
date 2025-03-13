@@ -25,22 +25,19 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v4
         
-      - name: Create .nojekyll file
+      - name: Prepare deployment
         run: |
-          touch .nojekyll
-          cp .nojekyll frontend/
-          
-      - name: List contents
-        run: |
-          echo "Current directory:"
-          pwd
-          echo "Frontend contents:"
-          ls -la frontend/
+          # Create a fresh deployment directory
+          mkdir -p _site
+          # Copy frontend contents to _site
+          cp -r frontend/* _site/
+          # Create .nojekyll to disable Jekyll processing
+          touch _site/.nojekyll
           
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: frontend
+          path: _site
           
   deploy:
     needs: build
