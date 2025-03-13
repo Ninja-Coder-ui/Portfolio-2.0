@@ -23,33 +23,22 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
-      - name: Prepare deployment
+      - name: Verify files
         run: |
-          # Remove existing _site directory if it exists
-          rm -rf _site
-          # Create new _site directory
-          mkdir -p _site
-          # Copy all frontend files directly to _site (root level)
-          cp -r frontend/* _site/
-          # Ensure .nojekyll exists
-          touch _site/.nojekyll
-          # Verify deployment contents
-          echo "Deployment contents:"
-          ls -la _site/
-          echo "\nVerifying index.html exists:"
-          if [ -f "_site/index.html" ]; then
-            echo "index.html found at root level"
-            echo "First few lines of index.html:"
-            head -n 5 _site/index.html
+          echo "Contents of frontend directory:"
+          ls -la frontend/
+          echo "\nChecking if index.html exists:"
+          if [ -f "frontend/index.html" ]; then
+            echo "✓ index.html found"
           else
-            echo "ERROR: index.html not found at root level!"
+            echo "✗ index.html not found"
             exit 1
           fi
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '_site'
+          path: 'frontend'
 
       - name: Deploy to GitHub Pages
         id: deployment
