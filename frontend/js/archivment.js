@@ -44,6 +44,11 @@ const clearBtn = document.getElementById('clearBtn');
 const downloadBtn = document.getElementById('downloadBtn');
 let audioBlob = null;
 
+// Get the base URL dynamically
+const baseUrl = window.location.hostname === 'localhost' 
+    ? 'http://localhost:3000'
+    : 'https://your-backend-url.com'; // Replace with your actual backend URL
+
 function populateVoiceList() {
     const voices = speechSynthesis.getVoices();
     voiceList.innerHTML = '';
@@ -85,14 +90,14 @@ convertBtn.addEventListener('click', async (e) => {
 
     try {
         const selectedLang = voiceList.value;
-        const response = await fetch('http://localhost:3000/generate-tts', {
+        const response = await fetch(`${baseUrl}/generate-tts`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ text, lang: selectedLang })
         });
 
         if (!response.ok) {
-            const fallbackResponse = await fetch('http://localhost:3000/generate-tts', {
+            const fallbackResponse = await fetch(`${baseUrl}/generate-tts`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ text, lang: 'en' })
@@ -114,7 +119,7 @@ convertBtn.addEventListener('click', async (e) => {
 
     } catch (error) {
         console.error('Error:', error);
-        alert('Failed to generate audio');
+        alert('Failed to generate audio. Please check your internet connection and try again.');
     }
 });
 
