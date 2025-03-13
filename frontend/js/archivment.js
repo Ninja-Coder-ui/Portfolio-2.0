@@ -70,25 +70,17 @@ convertBtn.addEventListener('click', async (e) => {
 
     try {
         const selectedLang = voiceList.value;
-<<<<<<< HEAD
         const response = await fetch('http://localhost:3000/generate-tts', {
-=======
-        const response = await fetch('http://localhost:5503/generate-tts', {
->>>>>>> 011c1dffad2ea87b68377440b46a074837748c8f
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ text, lang: selectedLang })
         });
 
         if (!response.ok) {
-<<<<<<< HEAD
             const fallbackResponse = await fetch('http://localhost:3000/generate-tts', {
-=======
-            const fallbackResponse = await fetch('http://localhost:5503/generate-tts', {
->>>>>>> 011c1dffad2ea87b68377440b46a074837748c8f
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ text, lang: 'hi' })
+                body: JSON.stringify({ text, lang: 'en' })
             });
 
             if (!fallbackResponse.ok) throw new Error('TTS generation failed');
@@ -122,11 +114,7 @@ downloadBtn.addEventListener('click', (e) => {
     const url = URL.createObjectURL(audioBlob);
     const a = document.createElement('a');
     a.href = url;
-<<<<<<< HEAD
     a.download = 'audio.mp3';
-=======
-    a.download = 'tts-audio.mp3';
->>>>>>> 011c1dffad2ea87b68377440b46a074837748c8f
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

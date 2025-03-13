@@ -400,13 +400,10 @@ button:hover {
 }
 .show {
     display: block;
-<<<<<<< HEAD
-}
-=======
 }
 /* ----------------- */
 
-.tts-container {
+/* .tts-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -429,5 +426,4 @@ button:hover {
 
 #clearBtn:hover {
     background: #d02525;
-}
->>>>>>> 011c1dffad2ea87b68377440b46a074837748c8f
+} */
