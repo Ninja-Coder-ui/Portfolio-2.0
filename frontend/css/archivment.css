@@ -400,4 +400,34 @@ button:hover {
 }
 .show {
     display: block;
+<<<<<<< HEAD
 }
+=======
+}
+/* ----------------- */
+
+.tts-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.text_to_Speech {
+  width: 100%;
+  max-width: 500px;
+}
+#clearBtn {
+    background: #E52E2D;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+#clearBtn:hover {
+    background: #d02525;
+}
+>>>>>>> 011c1dffad2ea87b68377440b46a074837748c8f
