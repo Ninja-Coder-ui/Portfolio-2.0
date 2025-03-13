@@ -5,16 +5,9 @@ const cors = require('cors');
 const fs = require('fs');
 const app = express();
 
-// Configure CORS
-app.use(cors({
-    origin: ['https://ninjacoder.vercel.app', 'http://localhost:5500', 'http://127.0.0.1:5500'],
-    methods: ['GET', 'POST'],
-    credentials: true
-}));
-
+app.use(cors());
 app.use(express.json());
 
-// Serve static files
 app.use(express.static(path.join(__dirname, '../frontend')));
 app.use('/css', express.static(path.join(__dirname, '../frontend/css')));
 app.use('/js', express.static(path.join(__dirname, '../frontend/js')));
@@ -56,12 +49,7 @@ app.post('/generate-tts', (req, res) => {
     }
 });
 
-// Health check endpoint
-app.get('/health', (req, res) => {
-    res.status(200).json({ status: 'ok' });
-});
-
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+    console.log(`Server running on http://localhost:${PORT}`);
 });

@@ -44,34 +44,10 @@ const clearBtn = document.getElementById('clearBtn');
 const downloadBtn = document.getElementById('downloadBtn');
 let audioBlob = null;
 
-// Get the base URL dynamically
-const baseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-    ? 'http://localhost:3000'
-    : 'https://ninjacoder-backend.vercel.app'; // Replace with your actual backend URL
-
-// Function to check if backend is available
-async function checkBackendHealth() {
-    try {
-        const response = await fetch(`${baseUrl}/health`);
-        return response.ok;
-    } catch (error) {
-        console.error('Backend health check failed:', error);
-        return false;
-    }
-}
-
 function populateVoiceList() {
     const voices = speechSynthesis.getVoices();
     voiceList.innerHTML = '';
-    
-    // Add default English option first
-    const defaultOption = document.createElement('option');
-    defaultOption.textContent = 'English (en-US)';
-    defaultOption.value = 'en-US';
-    voiceList.appendChild(defaultOption);
-
-    // Add other voices
-    voices.forEach((voice) => {
+    voices.forEach((voice, i) => {
         const option = document.createElement('option');
         option.textContent = `${voice.name} (${voice.lang})`;
         option.value = voice.lang;
@@ -79,16 +55,9 @@ function populateVoiceList() {
     });
 }
 
-// Handle voice loading for different browsers
-if (typeof speechSynthesis !== 'undefined' && speechSynthesis.onvoiceschanged !== undefined) {
+if (speechSynthesis.onvoiceschanged !== undefined) {
     speechSynthesis.onvoiceschanged = populateVoiceList;
-} else {
-    // Fallback for browsers that don't support onvoiceschanged
-    populateVoiceList();
 }
-
-// Add a timeout to ensure voices are loaded
-setTimeout(populateVoiceList, 1000);
 
 convertBtn.addEventListener('click', async (e) => {
     e.preventDefault();
@@ -100,27 +69,27 @@ convertBtn.addEventListener('click', async (e) => {
     }
 
     try {
-        // Check backend health first
-        const isBackendHealthy = await checkBackendHealth();
-        if (!isBackendHealthy) {
-            throw new Error('Backend service is not available');
-        }
-
         const selectedLang = voiceList.value;
-        const response = await fetch(`${baseUrl}/generate-tts`, {
+        const response = await fetch('http://localhost:3000/generate-tts', {
             method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json',
-                'Accept': 'audio/mpeg'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ text, lang: selectedLang })
         });
 
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            const fallbackResponse = await fetch('http://localhost:3000/generate-tts', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text, lang: 'en' })
+            });
+
+            if (!fallbackResponse.ok) throw new Error('TTS generation failed');
+
+            audioBlob = await fallbackResponse.blob();
+        } else {
+            audioBlob = await response.blob();
         }
 
-        audioBlob = await response.blob();
         downloadBtn.classList.remove('hide');
         downloadBtn.classList.add('show');
 
@@ -130,7 +99,7 @@ convertBtn.addEventListener('click', async (e) => {
 
     } catch (error) {
         console.error('Error:', error);
-        alert('Failed to generate audio. Please check your internet connection and try again. If the problem persists, please try again later.');
+        alert('Failed to generate audio');
     }
 });
 
