@@ -1,8 +1,0 @@
-{
-  "name": "portfolio-frontend",
-  "version": "1.0.0",
-  "description": "Portfolio Website Frontend",
-  "scripts": {
-    "build": "echo 'No build step required for static files'"
-  }
-} 
