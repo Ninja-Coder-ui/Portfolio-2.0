@@ -21,14 +21,21 @@ app.post('/generate-tts', (req, res) => {
     }
 
     try {
-        // Set response headers for better mobile compatibility
+        // Set mobile-friendly headers
         res.setHeader('Content-Type', 'audio/mpeg');
-        res.setHeader('Accept-Ranges', 'bytes');
-        res.setHeader('Cache-Control', 'no-cache');
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
         const tts = new gtts(text, lang);
         const filename = `tts-${Date.now()}.mp3`;
-        const filePath = path.join(__dirname, filename);
+        const filePath = path.join(__dirname, 'temp', filename);
+
+        // Ensure temp directory exists
+        const fs = require('fs');
+        if (!fs.existsSync(path.join(__dirname, 'temp'))) {
+            fs.mkdirSync(path.join(__dirname, 'temp'));
+        }
 
         tts.save(filePath, (err) => {
             if (err) {
@@ -36,13 +43,15 @@ app.post('/generate-tts', (req, res) => {
                 return res.status(500).json({ error: 'TTS generation failed' });
             }
 
-            // Stream the file instead of downloading
-            const stream = require('fs').createReadStream(filePath);
-            stream.pipe(res);
-            
-            // Clean up file after streaming
-            stream.on('end', () => {
-                require('fs').unlinkSync(filePath);
+            // Send file directly instead of streaming
+            res.sendFile(filePath, (err) => {
+                if (err) {
+                    console.error('Send file error:', err);
+                }
+                // Clean up file after sending
+                fs.unlink(filePath, (err) => {
+                    if (err) console.error('File cleanup error:', err);
+                });
             });
         });
     } catch (error) {

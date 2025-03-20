@@ -66,7 +66,66 @@ function initializeLanguages() {
     });
 }
 
-// Convert text to speech
+// Add download button functionality
+downloadBtn.addEventListener('click', async (e) => {
+    e.preventDefault();
+    const text = textarea.value.trim();
+    const selectedLang = voiceList.value;
+
+    if (!text || !selectedLang) {
+        alert('Please enter text and select a language first');
+        return;
+    }
+
+    try {
+        // Show loading state
+        downloadBtn.textContent = 'Preparing Download...';
+        downloadBtn.disabled = true;
+
+        const response = await fetch('/generate-tts', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'audio/mpeg'
+            },
+            body: JSON.stringify({ 
+                text, 
+                lang: selectedLang 
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to generate audio');
+        }
+
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        
+        // Create temporary link for download
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = `speech-${selectedLang}-${Date.now()}.mp3`;
+        
+        // Add to document, click and remove
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        
+        // Cleanup
+        URL.revokeObjectURL(url);
+
+    } catch (error) {
+        console.error('Download error:', error);
+        alert('Failed to download audio. Please try again.');
+    } finally {
+        // Reset button state
+        downloadBtn.textContent = 'Download Audio';
+        downloadBtn.disabled = false;
+    }
+});
+
+// Update the convert function to properly show download button
 async function convertToSpeech() {
     const text = textarea.value.trim();
     const selectedLang = voiceList.value;
@@ -81,53 +140,51 @@ async function convertToSpeech() {
         return;
     }
 
-    // Show loading state
-    convertBtn.disabled = true;
-    convertBtn.textContent = 'Converting...';
-
     try {
+        convertBtn.disabled = true;
+        convertBtn.textContent = 'Converting...';
+
         const response = await fetch('/generate-tts', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ text, lang: selectedLang })
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'audio/mpeg'
+            },
+            body: JSON.stringify({ 
+                text, 
+                lang: selectedLang 
+            })
         });
 
         if (!response.ok) {
             throw new Error('Failed to generate audio');
         }
 
-        const audioBlob = await response.blob();
-        const audioUrl = URL.createObjectURL(audioBlob);
-        
-        // Create and play audio
-        const audio = new Audio(audioUrl);
-        
-        // Show download button
-        downloadBtn.classList.remove('hide');
-        
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        const audio = new Audio(url);
+
         // Play audio
         await audio.play();
         
-        // Enable download
-        const downloadLink = document.createElement('a');
-        downloadLink.href = audioUrl;
-        downloadLink.download = `speech-${selectedLang}.mp3`;
-        downloadLink.click();
+        // Show download button
+        downloadBtn.classList.remove('hide');
+        downloadBtn.style.display = 'block';
 
     } catch (error) {
         console.error('Error:', error);
         alert('Failed to generate audio. Please try again.');
     } finally {
-        // Reset button state
         convertBtn.disabled = false;
         convertBtn.textContent = 'Convert To Speech';
     }
 }
 
-// Clear text function
+// Update clear function to properly hide download button
 function clearText() {
     textarea.value = '';
     downloadBtn.classList.add('hide');
+    downloadBtn.style.display = 'none';
 }
 
 // Initialize event listeners

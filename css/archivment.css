@@ -427,3 +427,32 @@ button:hover {
 #clearBtn:hover {
     background: #d02525;
 }
+
+#downloadBtn {
+    width: 100%;
+    padding: 12px;
+    background-color: #ffa07a;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+#downloadBtn:hover {
+    background-color: #ff8c5a;
+}
+
+#downloadBtn.hide {
+    display: none;
+}
+
+/* Mobile styles */
+@media screen and (max-width: 768px) {
+    #downloadBtn {
+        padding: 15px; /* Larger touch target for mobile */
+        font-size: 14px;
+    }
+}
