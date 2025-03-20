@@ -228,7 +228,7 @@ a {
           padding: 10px 0;
           margin: 0; } }
     #main-header nav ul a {
-      color: #454545;
+      color: #000;
       text-transform: uppercase;
       font-size: 14px;
       -webkit-transition: color 0.3s ease;
@@ -238,6 +238,17 @@ a {
       color: #E52E2D; }
     #main-header nav ul a:hover {
       color: #E52E2D; }
+
+      [data-theme="dark"] #main-header nav ul a {
+        color: #ffffff;
+      }
+
+      [data-theme="dark"] #main-header nav ul .active {
+        color: #E52E2D; }
+
+      [data-theme="dark"] #main-header nav ul a:hover {
+        color: #E52E2D; }
+      
 
 .mobile-toggle {
   display: none;
@@ -343,20 +354,25 @@ top: 50px; }
   height: 300px;
   border-radius: 50%;
   border: 3px #dc3737 solid; }
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 888px) {
     .hero-content img {
       margin-top: 3rem;
       width: 200px;
       height: 200px; } }
 
-      @media screen and (max-height: 800px) {
+      @media screen and (max-height: 400px) {
         .hero-content img {
           width: 200px;
           height: 200px; } }
+  @media screen and (max-height: 550px){
+    .section{
+    margin-top: 20rem;}
+    
+  }
 
 
 /***********************************ARCHIVMENT BOTTON STYLES***********************************/
-.btn-shine {
+/* .btn-shine {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -421,7 +437,7 @@ top: 50px; }
 
 h5{
   color: #b89c9c;
-}
+} */
 
 /***********************************ABOUT STYLES***********************************/
 .about-text {
@@ -502,11 +518,9 @@ h5{
   width: 79%; }
 
 /***********************************SERVICES STYLES***********************************/
-#services{
-  background: #f8f9fa; }
 
 .service-block {
-  padding: 20px; }
+  padding: 20px;}
   .service-block .icon {
     color: #E52E2D;
     font-size: 40px;
@@ -613,6 +627,14 @@ h5{
     margin: 0; }
   .img-overlay-text p {
     color: #fff; }
+
+    [data-theme="dark"] .button {
+      color: #ffffff;
+    }
+    
+    /* [data-theme="dark"] .dribbble {
+      color: #ffffff;
+    } */
 
 /***********************************CLIENT STYLES***********************************/
 #client {
@@ -803,7 +825,6 @@ button, input, textarea {
   justify-content: center;
   align-items: center;
   margin-top: 20px;
-  /* color: #ffa4bd; */
   font-family: 'Roboto Condensed', sans-serif;
   font-size: 16px;
   font-weight: normal;
@@ -815,12 +836,33 @@ button, input, textarea {
   color: #240505;
   font-weight: bold;
   text-decoration: none;
+  transition: all 0.3s ease;
 }
 
 .dribbble {
   width: 20px;
   height: 20px;
   margin: 0 5px;
+  color: #002B33;
+  transition: all 0.3s ease;
+}
+
+/* Dark theme styles */
+[data-theme="dark"] .credits-link {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .dribbble {
+  color: #ffffff;
+}
+
+/* Hover effects */
+.credits-link:hover {
+  color: var(--primary-color);
+}
+
+.credits-link:hover .dribbble {
+  color: var(--primary-color);
 }
 
 @media screen and (max-width: 520px) {
@@ -878,4 +920,97 @@ footer {
 .link-header a{
   color: #fff;
   
+}
+
+
+/************************************** Theme Switcher Styles ****************************************/
+:root {
+    --primary-color: #E52E2D;
+    --text-color: #454545;
+    --bg-color: #fff;
+    --card-bg: #fff;
+    --border-color: #a3a3a3;
+}
+
+[data-theme="dark"] {
+    --primary-color: #ff4444;
+    --text-color: #fff;
+    --bg-color: #121212;
+    --card-bg: #1e1e1e;
+    --border-color: #333;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: all 0.3s ease;
+}
+
+.theme-switcher {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 999;
+}
+
+.theme-toggle-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    transition: all 0.3s ease;
+}
+
+.theme-toggle-btn:hover {
+    transform: scale(1.1);
+}
+
+/* Dark theme specific styles */
+[data-theme="dark"] {
+    .service-block {
+        background: var(--card-bg);
+    }
+    
+    .portfolio-item {
+        background: var(--card-bg);
+    }
+    
+    .screen {
+        background: var(--card-bg);
+    }
+    
+    #main-header {
+        background: var(--bg-color);
+        border-bottom-color: var(--primary-color);
+    }
+    
+    nav ul a {
+        color: var(--text-color);
+    }
+    
+    .mobile-toggle span {
+        background: var(--text-color);
+    }
+}
+
+/* Responsive styles for theme switcher */
+@media screen and (max-width: 768px) {
+    .theme-switcher {
+        bottom: 20px;
+        right: 20px;
+    }
+    
+    .theme-toggle-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
+    }
 }

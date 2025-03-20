@@ -1,53 +1,42 @@
 const express = require('express');
+const gtts = require('node-gtts');
 const path = require('path');
-const gtts = require('gtts');
-const cors = require('cors');
+const fs = require('fs');
 const app = express();
 
-app.use(cors());
 app.use(express.json());
+app.use(express.static('.')); // Serve static files from root directory
 
-app.use(express.static(path.join(__dirname)));
-app.use('/css', express.static(path.join(__dirname, 'css')));
-app.use('/js', express.static(path.join(__dirname, 'js')));
-app.use('/img', express.static(path.join(__dirname, 'img')));
-app.use('/Achievements', express.static(path.join(__dirname, 'Achievements')));
-
-app.post('/generate-tts', (req, res) => {
-    const { text, lang } = req.body;
-
-    if (!text) {
-        return res.status(400).json({ error: 'Text is required' });
+// TTS endpoint
+app.post('/api/tts', (req, res) => {
+    const { text, lang = 'en' } = req.body;
+    
+    // Create temporary file path
+    const tempFile = path.join('temp', `speech-${Date.now()}.mp3`);
+    
+    // Ensure temp directory exists
+    if (!fs.existsSync('temp')) {
+        fs.mkdirSync('temp');
     }
-
-    try {
-        const tts = new gtts(text, lang || 'en');
-        const filename = `tts-${Date.now()}.mp3`;
-        const filePath = path.join(__dirname, filename);
-
-        tts.save(filePath, (err) => {
-            if (err) {
-                console.error('TTS save error:', err);
-                return res.status(500).json({ error: 'TTS generation failed' });
-            }
-
-            res.download(filePath, (err) => {
-                if (err) console.error('Download error:', err);
-                require('fs').unlinkSync(filePath);
+    
+    // Initialize TTS with specified language
+    const tts = gtts(lang);
+    
+    // Create MP3 file
+    tts.save(tempFile, text, () => {
+        // Send file to client
+        res.download(tempFile, 'speech.mp3', (err) => {
+            // Delete temporary file after sending
+            fs.unlink(tempFile, (deleteErr) => {
+                if (deleteErr) console.error('Error deleting temp file:', deleteErr);
             });
+            
+            if (err) console.error('Error sending file:', err);
         });
-    } catch (error) {
-        console.error('Server error:', error);
-        res.status(500).json({ error: 'Server error' });
-    }
-});
-
-// Handle all routes
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
+    });
 });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+    console.log(`Server running on port ${PORT}`);
+}); 

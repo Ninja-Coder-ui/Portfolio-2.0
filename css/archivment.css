@@ -45,11 +45,17 @@
   
   h2 {
     margin-bottom: 20px; }
-  
+
   h3 {
     margin-top: 20px;
     margin-bottom: 10px; }
+
+    [data-theme="dark"] h3 {
+      color: #ffffff;
+    }
   
+
+
   p {
     font-size: 16px;
     line-height: 1.6;
@@ -225,6 +231,11 @@
         text-align: center
     }
 
+    [data-theme="dark"] .my-card {
+      color: #91a4b5;
+    }
+    
+
     .my-card.active {
         opacity: 1;
         transform: scale(2) translateX(0);
@@ -333,9 +344,14 @@ footer {
 .row_box label {
     font-size: 1.2rem;
     font-weight: bold;
-    color: var(--white_color);
+    color: #000000;
     margin-bottom: 0.313rem;
 }
+
+[data-theme="dark"] .row_box label{
+  color: #ffffff;
+}
+
 .text_to_Speech :where(textarea, select, button) {
     outline: none;
     width: 100%;
@@ -364,6 +380,12 @@ footer {
     border: 0.125rem solid var(--orange_color);
     box-shadow: 0rem 0rem 0.625rem 1rem var(--box_shadow);
 }
+
+[data-theme="dark"] select {
+  color: #817b2d;
+}
+
+
 .row_box select {
     font-size: 1rem;
     background: none;
@@ -401,58 +423,4 @@ button:hover {
 .show {
     display: block;
 }
-/* ----------------- */
 
-.tts-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
-.text_to_Speech {
-  width: 100%;
-  max-width: 500px;
-}
-#clearBtn {
-    background: #E52E2D;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 5px;
-    margin-top: 10px;
-}
-
-#clearBtn:hover {
-    background: #d02525;
-}
-
-#downloadBtn {
-    width: 100%;
-    padding: 12px;
-    background-color: #ffa07a;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    margin-top: 10px;
-    font-size: 16px;
-    transition: background-color 0.3s;
-}
-
-#downloadBtn:hover {
-    background-color: #ff8c5a;
-}
-
-#downloadBtn.hide {
-    display: none;
-}
-
-/* Mobile styles */
-@media screen and (max-width: 768px) {
-    #downloadBtn {
-        padding: 15px; /* Larger touch target for mobile */
-        font-size: 14px;
-    }
-}

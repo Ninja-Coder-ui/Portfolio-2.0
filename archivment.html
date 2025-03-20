@@ -15,11 +15,8 @@
 <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css'>
 <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css'>
 <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.css'>
-<!-- <link rel="stylesheet" href="./style.css"> -->
-<!-- <link rel="stylesheet" href="archivment.css"> -->
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/archivment.css">
-
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 <link rel="icon" type="image/x-icon" href="/img/1949889-200.png">
 
@@ -40,7 +37,7 @@
     <header id="main-header">
         <div class="header-wrapper">
             <a class="logo" href="https://ninjacoder.vercel.app/">Ninja_Coder</a>
-    
+            
             <div class="mobile-toggle">
                 <span></span>
                 <span></span>
@@ -49,11 +46,10 @@
     
             <nav>
                 <ul>
-                    <!--Main nav to navigate to different parts of the page-->
-                    <li><a id="hero-link" href="/">Home</a></li>
-                    <li><a id="archivment-link" href="/archivment.html" class="btn-shine">Achievements</a></li>
-                    <li><a id="Experience-link" href="#services">Experience</a></li>
-                    <li><a id="tts-link" href="#tts">TTS</a></li>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="archivment.html" class="btn-shine">Achievements</a></li>
+                    <li><a href="#services">Experience</a></li>
+                    <li><a href="#tts">TTS</a></li>
                 </ul>
             </nav>
         </div>
@@ -69,7 +65,7 @@
                 <h1>My <span class="accent-text">Achievements</span></h1>
                 <div class="carousel">
                     <div class="card-carousel">
-                        <div class="my-card"><img src="Achievements/Azure Adminnistator.jpg" alt="Azure Adminnistator">Azure Adminnistator</div>
+                        <div class="my-card"><img src="Achievements/Azure Adminnistator.jpg" alt="Azure Adminnistator">Azure Administator</div>
                         <div class="my-card"><img src="Achievements/Azure AI.jpg" alt="Azure AI">Azure AI</div>
                         <div class="my-card"><img src="Achievements/AWS Cloud Solutions.jpg" alt="AWS Cloud">AWS Cloud</div>
                         <div class="my-card"><img src="Achievements/Foundations of User Experience (UX).jpg" alt="UX Design">UX Design</div>
@@ -167,10 +163,11 @@
     </div>
 </section>
 <!--------------------------------------TTS SECTION-------------------------------------->
-<!-- 
+
 <section id="tts">
     <div class="container-speech">
         <div class="hero_section">
+            <!-- Text-To-Speech -->
             <div class="text_to_Speech">
                 <div class="section-title">
                     <h1>Text to <span class="accent-text">Speech</span></h1>
@@ -191,9 +188,9 @@
             </div>
             <div class="credits">
                 powered by
-                <a class="credits-link" href="https://dribbble.com/shots/2666271-Contact" target="_blank">
+                <a class="credits-link" href="https://ninjacoder.vercel.app" target="_blank">
                   <svg class="dribbble" viewBox="0 0 200 200">
-                    <g stroke="#002B33" fill="none">
+                    <g stroke="currentColor" fill="none">
                       <circle cx="100" cy="100" r="90" stroke-width="20"></circle>
                       <path d="M62.737004,13.7923523 C105.08055,51.0454853 135.018754,126.906957 141.768278,182.963345" stroke-width="20"></path>
                       <path d="M10.3787186,87.7261455 C41.7092324,90.9577894 125.850356,86.5317271 163.474536,38.7920951" stroke-width="20"></path>
@@ -202,35 +199,12 @@
                   </svg>
                   Ninja Coder
                 </a>
+              </div>
             </div>
         </div>
     </div>
-</section> -->
-
-
-<div class="tts-container">
-    <div class="text_to_Speech">
-        <div class="section-title">
-            <h1>Text to <span class="accent-text">Speech</span></h1>
-        </div>
-        <div class="row_box">
-            <label>Enter Text</label>
-            <textarea id="ttsText"></textarea>
-        </div>
-        <div class="row_box">
-            <label>Select Language</label>
-            <div class="select_box">
-                <select id="voiceList" class="mobile-select">
-                    <option value="">Select a language</option>
-                </select>
-            </div>
-        </div>
-        <button id="convert_speech">Convert To Speech</button>
-        <button id="clearBtn">Clear Text</button>
-        <button id="downloadBtn" class="hide">Download Audio</button>
-    </div>
-</div>
-
+</section>
+    
 <!--------------------------------------FOOTER SECTION-------------------------------------->
 
 <footer>
@@ -240,15 +214,25 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script>
 <script src="http://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-<script src="js/particles.js"></script>
-<script src="js/owl.carousel.min.js"></script>
-<script src="js/jquery.magnific-popup.js"></script>
-<script src="js/scrollmagic/minified/ScrollMagic.min.js"></script>
-<script src="js/scrollmagic/uncompressed/plugins/debug.addIndicators.js"></script>
-<script src="js/main.js"></script>
-<script src="js/archivment.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/recorder.js/1.0.1/recorder.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lamejs/1.2.0/lame.min.js"></script>
     
+<!-- partial -->
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+<script src='https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js'></script>
+<script src='https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.2/ScrollMagic.min.js'></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>
+<script src="js/script.js"></script>
+<script src="js/archivment.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js" referrerpolicy="no-referrer"></script>
+
+<div class="theme-switcher">
+    <button class="theme-toggle-btn" name="Theme Toggle Button">
+        <i class="fas fa-moon"></i>
+    </button>
+</div>
+
 </body>
 </html>

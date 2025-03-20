@@ -1,147 +1,205 @@
-var $num = $('.card-carousel .my-card').length;
-var $currentIndex = 0;
+// Card carousel variables
+var $num = $('.card-carousel .my-card').length; // Total number of cards
+var $currentIndex = 0; // Current active card index
 
+/**
+ * Initialize the card carousel
+ * Sets up initial positions for active, previous and next cards
+ */
 function initializeCards() {
+    // Remove all position classes
     $('.card-carousel .my-card').removeClass('active prev next');
+    // Set active card
     $('.card-carousel .my-card').eq($currentIndex).addClass('active');
+    // Set previous card (handles wrap-around using modulo)
     $('.card-carousel .my-card').eq(($currentIndex - 1 + $num) % $num).addClass('prev');
+    // Set next card
     $('.card-carousel .my-card').eq(($currentIndex + 1) % $num).addClass('next');
 }
 
+/**
+ * Rotate cards in the carousel
+ * Moves cards one position forward in the rotation
+ */
 function rotateCards() {
+    // Update current index with wrap-around
     $currentIndex = ($currentIndex + 1) % $num;
+    // Remove all position classes
     $('.card-carousel .my-card').removeClass('active prev next');
+    // Set new positions
     $('.card-carousel .my-card').eq($currentIndex).addClass('active');
     $('.card-carousel .my-card').eq(($currentIndex - 1 + $num) % $num).addClass('prev');
     $('.card-carousel .my-card').eq(($currentIndex + 1) % $num).addClass('next');
 }
 
+// Initialize carousel and start auto-rotation
 initializeCards();
-setInterval(rotateCards, 4000);
+setInterval(rotateCards, 4000); // Rotate every 4 seconds
 
+/*******************************************
+ * DISABLE RIGHT CLICK
+ * Prevents context menu from appearing
+ *******************************************/
+document.addEventListener('contextmenu', event => event.preventDefault());
 
-/*******************************************DISABLE RIGHT CLICK*******************************************/
+/**
+ * Keyboard Navigation
+ * Allows using left/right arrow keys to navigate carousel
+ */
+$('html body').keydown(function(e) {
+    if (e.keyCode == 37) { // left arrow key
+        $('.card-carousel .active').prev().trigger('click');
+    }
+    else if (e.keyCode == 39) { // right arrow key
+        $('.card-carousel .active').next().trigger('click');
+    }
+});
 
-    document.addEventListener('contextmenu', event => event.preventDefault());
+/******************************************* TEXT TO SPEECH SECTION******************************************/
 
+// Initialize Text-to-Speech variables
+const textarea = document.querySelector("textarea"),
+voiceList = document.querySelector("select"),
+speechBtn = document.getElementById("convert_speech"),
+clearBtn = document.getElementById("clearBtn");
 
-    // Keyboard nav
-    $('html body').keydown(function(e) {
-        if (e.keyCode == 37) { // left
-            $('.card-carousel .active').prev().trigger('click');
-        }
-        else if (e.keyCode == 39) { // right
-            $('.card-carousel .active').next().trigger('click');
-        }
-    });
+// Speech synthesis setup
+let synth = speechSynthesis,
+isSpeaking = true,
+utterance;
 
-/******************************************TTS SECTION***************************************/
+// Initialize available voices
+voices();
 
-const textarea = document.getElementById('ttsText');
-const voiceList = document.getElementById('voiceList');
-const convertBtn = document.getElementById('convert_speech');
-const clearBtn = document.getElementById('clearBtn');
-const downloadBtn = document.getElementById('downloadBtn');
-let audioBlob = null;
-
-function loadVoices() {
-    let voices = speechSynthesis.getVoices();
-    
-    // Wait for voices to be loaded
-    if (voices.length === 0) {
-        speechSynthesis.addEventListener('voiceschanged', () => {
-            voices = speechSynthesis.getVoices();
-            populateVoiceList(voices);
-        });
+/**
+ * Textarea input handler
+ * Shows/hides clear button based on content
+ */
+textarea.addEventListener("input", function () {
+    if (textarea.value.length > 0) {
+        // Show clear button when text exists
+        clearBtn.classList.add("show");
+        clearBtn.classList.remove("hide");
     } else {
-        populateVoiceList(voices);
+        // Hide clear button when text is empty
+        clearBtn.classList.add("hide");
+        clearBtn.classList.remove("show");
+    }
+});
+
+/**
+ * Clear button handler
+ * Clears textarea content and hides clear button
+ */
+clearBtn.addEventListener("click", e => {
+    textarea.value = "";
+    clearBtn.classList.add("hide");
+    clearBtn.classList.remove("show");
+});
+
+/**
+ * Initialize voice options
+ * Populates voice selection dropdown with available voices
+ */
+function voices() {
+    let defaultVoice = "hi-IN"; // Default to Hindi voice if available
+
+    for (let voice of synth.getVoices()) {
+        // Set selected state for Google US English or Hindi voices
+        let selected = (voice.name === "Google US English" || voice.lang === "hi-IN") ? "selected" : "";
+        let option = `<option value="${voice.name}" ${selected}>${voice.name} (${voice.lang})</option>`;
+        voiceList.insertAdjacentHTML("beforeend", option);
     }
 }
 
-function populateVoiceList(voices) {
-    const voiceList = document.getElementById('voiceList');
-    voiceList.innerHTML = ''; // Clear existing options
-    
-    voices.forEach((voice) => {
-        const option = document.createElement('option');
-        option.value = voice.name;
-        option.textContent = `${voice.name} (${voice.lang})`;
-        voiceList.appendChild(option);
-    });
-}
+// Update voices when the list changes
+synth.addEventListener("voiceschanged", voices);
 
-// Initialize voices when the page loads
-window.addEventListener('load', loadVoices);
-// Some mobile browsers need this additional event
-if (speechSynthesis.onvoiceschanged !== undefined) {
-    speechSynthesis.onvoiceschanged = loadVoices;
-}
-
-convertBtn.addEventListener('click', async (e) => {
-    e.preventDefault();
-    const text = textarea.value;
-
-    if (!text) {
-        alert('Please enter some text');
-        return;
-    }
-
-    try {
-        const selectedLang = voiceList.value;
-        const response = await fetch('http://localhost:3000/generate-tts', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ text, lang: selectedLang })
-        });
-
-        if (!response.ok) {
-            const fallbackResponse = await fetch('http://localhost:3000/generate-tts', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ text, lang: 'en' })
-            });
-
-            if (!fallbackResponse.ok) throw new Error('TTS generation failed');
-
-            audioBlob = await fallbackResponse.blob();
-        } else {
-            audioBlob = await response.blob();
+/**
+ * Text-to-Speech conversion
+ * @param {string} text - The text to convert to speech
+ */
+function textToSpeech(text) {
+    utterance = new SpeechSynthesisUtterance(text);
+    // Set selected voice
+    for(let voice of synth.getVoices()) {
+        if(voice.name === voiceList.value) {
+            utterance.voice = voice;
         }
-
+    }
+    
+    // Create download request
+    fetch('/api/tts', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            text: text,
+            lang: utterance.voice.lang.split('-')[0] // Use language code from selected voice
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.blob();
+    })
+    .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const downloadBtn = document.getElementById('downloadBtn');
         downloadBtn.classList.remove('hide');
         downloadBtn.classList.add('show');
-
-        const audioUrl = URL.createObjectURL(audioBlob);
-        const audio = new Audio(audioUrl);
-        audio.play();
-
-    } catch (error) {
+        
+        downloadBtn.onclick = () => {
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'speech.mp3';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        };
+    })
+    .catch(error => {
         console.error('Error:', error);
-        alert('Failed to generate audio');
-    }
-});
+        alert('Failed to generate speech file. Please try again.');
+    });
 
-downloadBtn.addEventListener('click', (e) => {
+    synth.speak(utterance);
+}
+
+/**
+ * Speech button click handler
+ * Manages speech synthesis and button states
+ */
+speechBtn.addEventListener("click", e => {
     e.preventDefault();
-
-    if (!audioBlob) {
-        alert('No audio available to download');
-        return;
+    if(textarea.value !== "") {
+        // Start speech if not already speaking
+        if(!synth.speaking) {
+            textToSpeech(textarea.value);
+        }
+        // Handle pause/resume for longer text
+        if(textarea.value.length > 20) {
+            setInterval(() => {
+                if(!synth.speaking && !isSpeaking) {
+                    isSpeaking = true;
+                    speechBtn.innerText = "Convert To Speech";
+                }
+            }, 500);
+            // Toggle between pause and resume
+            if(isSpeaking) {
+                synth.resume();
+                isSpeaking = false;
+                speechBtn.innerText = "Pause";
+            } else {
+                synth.pause();
+                isSpeaking = true;
+                speechBtn.innerText = "Resume";
+            }
+        } else {
+            speechBtn.innerText = "Convert To Speech";
+        }
     }
-
-    const url = URL.createObjectURL(audioBlob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'tts-audio.mp3';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-});
-
-clearBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    textarea.value = '';
-    downloadBtn.classList.add('hide');
-    downloadBtn.classList.remove('show');
 });
