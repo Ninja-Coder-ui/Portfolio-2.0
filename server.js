@@ -4,28 +4,14 @@ const gtts = require('gtts');
 const cors = require('cors');
 const app = express();
 
-// Enable CORS for all routes
-app.use(cors({
-    origin: '*',
-    methods: ['GET', 'POST'],
-    allowedHeaders: ['Content-Type']
-}));
-
+app.use(cors());
 app.use(express.json());
 
-// Serve static files
 app.use(express.static(path.join(__dirname)));
 app.use('/css', express.static(path.join(__dirname, 'css')));
 app.use('/js', express.static(path.join(__dirname, 'js')));
 app.use('/img', express.static(path.join(__dirname, 'img')));
 app.use('/Achievements', express.static(path.join(__dirname, 'Achievements')));
-
-// Create temp directory for audio files
-const fs = require('fs');
-const tempDir = path.join(__dirname, 'temp');
-if (!fs.existsSync(tempDir)) {
-    fs.mkdirSync(tempDir);
-}
 
 app.post('/generate-tts', (req, res) => {
     const { text, lang } = req.body;
@@ -37,7 +23,7 @@ app.post('/generate-tts', (req, res) => {
     try {
         const tts = new gtts(text, lang || 'en');
         const filename = `tts-${Date.now()}.mp3`;
-        const filePath = path.join(tempDir, filename);
+        const filePath = path.join(__dirname, filename);
 
         tts.save(filePath, (err) => {
             if (err) {
@@ -46,14 +32,8 @@ app.post('/generate-tts', (req, res) => {
             }
 
             res.download(filePath, (err) => {
-                if (err) {
-                    console.error('Download error:', err);
-                    return res.status(500).json({ error: 'Download failed' });
-                }
-                // Clean up file after sending
-                fs.unlink(filePath, (unlinkErr) => {
-                    if (unlinkErr) console.error('File cleanup error:', unlinkErr);
-                });
+                if (err) console.error('Download error:', err);
+                require('fs').unlinkSync(filePath);
             });
         });
     } catch (error) {
@@ -62,13 +42,12 @@ app.post('/generate-tts', (req, res) => {
     }
 });
 
-// Handle all other routes
+// Handle all routes
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Use environment port or default to 3000
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, '0.0.0.0', () => {
+app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
