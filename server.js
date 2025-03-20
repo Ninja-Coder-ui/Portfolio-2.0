@@ -14,14 +14,19 @@ app.use('/img', express.static(path.join(__dirname, 'img')));
 app.use('/Achievements', express.static(path.join(__dirname, 'Achievements')));
 
 app.post('/generate-tts', (req, res) => {
-    const { text, lang } = req.body;
+    const { text, lang = 'en' } = req.body;
 
     if (!text) {
         return res.status(400).json({ error: 'Text is required' });
     }
 
     try {
-        const tts = new gtts(text, lang || 'en');
+        // Set response headers for better mobile compatibility
+        res.setHeader('Content-Type', 'audio/mpeg');
+        res.setHeader('Accept-Ranges', 'bytes');
+        res.setHeader('Cache-Control', 'no-cache');
+
+        const tts = new gtts(text, lang);
         const filename = `tts-${Date.now()}.mp3`;
         const filePath = path.join(__dirname, filename);
 
@@ -31,8 +36,12 @@ app.post('/generate-tts', (req, res) => {
                 return res.status(500).json({ error: 'TTS generation failed' });
             }
 
-            res.download(filePath, (err) => {
-                if (err) console.error('Download error:', err);
+            // Stream the file instead of downloading
+            const stream = require('fs').createReadStream(filePath);
+            stream.pipe(res);
+            
+            // Clean up file after streaming
+            stream.on('end', () => {
                 require('fs').unlinkSync(filePath);
             });
         });

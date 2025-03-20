@@ -42,106 +42,113 @@ const voiceList = document.getElementById('voiceList');
 const convertBtn = document.getElementById('convert_speech');
 const clearBtn = document.getElementById('clearBtn');
 const downloadBtn = document.getElementById('downloadBtn');
-let audioBlob = null;
 
-function loadVoices() {
-    let voices = speechSynthesis.getVoices();
-    
-    // Wait for voices to be loaded
-    if (voices.length === 0) {
-        speechSynthesis.addEventListener('voiceschanged', () => {
-            voices = speechSynthesis.getVoices();
-            populateVoiceList(voices);
-        });
-    } else {
-        populateVoiceList(voices);
-    }
-}
+// Define supported languages
+const languages = [
+    { code: 'en', name: 'English' },
+    { code: 'hi', name: 'Hindi' },
+    { code: 'es', name: 'Spanish' },
+    { code: 'fr', name: 'French' },
+    { code: 'de', name: 'German' },
+    { code: 'ja', name: 'Japanese' },
+    { code: 'ko', name: 'Korean' },
+    { code: 'zh', name: 'Chinese' }
+];
 
-function populateVoiceList(voices) {
-    const voiceList = document.getElementById('voiceList');
-    voiceList.innerHTML = ''; // Clear existing options
-    
-    voices.forEach((voice) => {
+// Initialize language dropdown
+function initializeLanguages() {
+    voiceList.innerHTML = '<option value="">Select Language</option>';
+    languages.forEach(lang => {
         const option = document.createElement('option');
-        option.value = voice.name;
-        option.textContent = `${voice.name} (${voice.lang})`;
+        option.value = lang.code;
+        option.textContent = lang.name;
         voiceList.appendChild(option);
     });
 }
 
-// Initialize voices when the page loads
-window.addEventListener('load', loadVoices);
-// Some mobile browsers need this additional event
-if (speechSynthesis.onvoiceschanged !== undefined) {
-    speechSynthesis.onvoiceschanged = loadVoices;
-}
-
-convertBtn.addEventListener('click', async (e) => {
-    e.preventDefault();
-    const text = textarea.value;
+// Convert text to speech
+async function convertToSpeech() {
+    const text = textarea.value.trim();
+    const selectedLang = voiceList.value;
 
     if (!text) {
         alert('Please enter some text');
         return;
     }
 
+    if (!selectedLang) {
+        alert('Please select a language');
+        return;
+    }
+
+    // Show loading state
+    convertBtn.disabled = true;
+    convertBtn.textContent = 'Converting...';
+
     try {
-        const selectedLang = voiceList.value;
-        const response = await fetch('http://localhost:3000/generate-tts', {
+        const response = await fetch('/generate-tts', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ text, lang: selectedLang })
         });
 
         if (!response.ok) {
-            const fallbackResponse = await fetch('http://localhost:3000/generate-tts', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ text, lang: 'en' })
-            });
-
-            if (!fallbackResponse.ok) throw new Error('TTS generation failed');
-
-            audioBlob = await fallbackResponse.blob();
-        } else {
-            audioBlob = await response.blob();
+            throw new Error('Failed to generate audio');
         }
 
-        downloadBtn.classList.remove('hide');
-        downloadBtn.classList.add('show');
-
+        const audioBlob = await response.blob();
         const audioUrl = URL.createObjectURL(audioBlob);
+        
+        // Create and play audio
         const audio = new Audio(audioUrl);
-        audio.play();
+        
+        // Show download button
+        downloadBtn.classList.remove('hide');
+        
+        // Play audio
+        await audio.play();
+        
+        // Enable download
+        const downloadLink = document.createElement('a');
+        downloadLink.href = audioUrl;
+        downloadLink.download = `speech-${selectedLang}.mp3`;
+        downloadLink.click();
 
     } catch (error) {
         console.error('Error:', error);
-        alert('Failed to generate audio');
+        alert('Failed to generate audio. Please try again.');
+    } finally {
+        // Reset button state
+        convertBtn.disabled = false;
+        convertBtn.textContent = 'Convert To Speech';
     }
-});
+}
 
-downloadBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-
-    if (!audioBlob) {
-        alert('No audio available to download');
-        return;
-    }
-
-    const url = URL.createObjectURL(audioBlob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'tts-audio.mp3';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-});
-
-clearBtn.addEventListener('click', (e) => {
-    e.preventDefault();
+// Clear text function
+function clearText() {
     textarea.value = '';
     downloadBtn.classList.add('hide');
-    downloadBtn.classList.remove('show');
-});
+}
+
+// Initialize event listeners
+window.addEventListener('load', initializeLanguages);
+convertBtn.addEventListener('click', convertToSpeech);
+clearBtn.addEventListener('click', clearText);
+
+// Mobile-specific adjustments
+if (/Mobi|Android/i.test(navigator.userAgent)) {
+    // Prevent zoom on focus
+    textarea.style.fontSize = '16px';
+    voiceList.style.fontSize = '16px';
+    
+    // Add touch event handling
+    convertBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        convertToSpeech();
+    });
+    
+    clearBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        clearText();
+    });
+}
