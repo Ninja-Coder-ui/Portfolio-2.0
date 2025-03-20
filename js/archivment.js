@@ -44,19 +44,37 @@ const clearBtn = document.getElementById('clearBtn');
 const downloadBtn = document.getElementById('downloadBtn');
 let audioBlob = null;
 
-function populateVoiceList() {
-    const voices = speechSynthesis.getVoices();
-    voiceList.innerHTML = '';
-    voices.forEach((voice, i) => {
+function loadVoices() {
+    let voices = speechSynthesis.getVoices();
+    
+    // Wait for voices to be loaded
+    if (voices.length === 0) {
+        speechSynthesis.addEventListener('voiceschanged', () => {
+            voices = speechSynthesis.getVoices();
+            populateVoiceList(voices);
+        });
+    } else {
+        populateVoiceList(voices);
+    }
+}
+
+function populateVoiceList(voices) {
+    const voiceList = document.getElementById('voiceList');
+    voiceList.innerHTML = ''; // Clear existing options
+    
+    voices.forEach((voice) => {
         const option = document.createElement('option');
+        option.value = voice.name;
         option.textContent = `${voice.name} (${voice.lang})`;
-        option.value = voice.lang;
         voiceList.appendChild(option);
     });
 }
 
+// Initialize voices when the page loads
+window.addEventListener('load', loadVoices);
+// Some mobile browsers need this additional event
 if (speechSynthesis.onvoiceschanged !== undefined) {
-    speechSynthesis.onvoiceschanged = populateVoiceList;
+    speechSynthesis.onvoiceschanged = loadVoices;
 }
 
 convertBtn.addEventListener('click', async (e) => {
