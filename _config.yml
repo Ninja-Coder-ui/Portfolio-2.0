@@ -1,0 +1,12 @@
+exclude:
+  - node_modules
+  - backend
+  - "*.json"
+  - "*.md"
+  - "*.yml"
+  - LICENSE
+  - "*.log"
+  - .git*
+
+include:
+  - .nojekyll 

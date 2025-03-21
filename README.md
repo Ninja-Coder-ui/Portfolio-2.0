@@ -1,122 +1,114 @@
-# Personal Portfolio Website 🚀
+# Portfolio 2.0
 
-A modern, responsive portfolio website showcasing my professional journey, technical skills, and creative projects. Built with cutting-edge web technologies and featuring an intuitive dark/light theme switcher, interactive elements, and seamless user experience.
+A modern, responsive portfolio website showcasing my skills, projects, and achievements. Built with HTML, CSS, and JavaScript, featuring a clean and professional design.
 
-## ✨ Key Features
+## 🌐 Live Demo
 
-- **Advanced Theme System**: 
-  - Dynamic dark/light mode switching with floating button
-  - Seamless theme transitions across all components
-  - Theme persistence across sessions
-  - Consistent styling in both modes
+Visit the live portfolio at: [portfolio-2-0-psi.vercel.app](https://portfolio-2-0-psi.vercel.app)
 
-- **Interactive Portfolio**:
-  - Dynamic project filtering system
-  - Category-based organization
-  - Elegant hover effects
-  - Lightbox image preview
-  - Responsive grid layout
+## 🚀 Features
 
-- **Professional Sections**:
-  - Animated hero section with Particle.js
-  - Detailed about section with skill progress bars
-  - Comprehensive services showcase
-  - Achievement gallery with certificate display
-  - Functional contact form with Web3Forms integration
-  - Text-to-Speech converter with multiple voices
+- Responsive design that works on all devices
+- Modern and clean UI/UX
+- Text-to-Speech functionality for accessibility
+- Interactive project showcase
+- Skills and achievements section
+- Contact form
+- Smooth scrolling and animations
+- Dark/Light mode support
 
-- **Performance Optimizations**:
-  - Lazy loading for images and scripts
-  - Progressive component initialization
-  - Optimized resource loading
-  - Reduced initial page load time
-  - Efficient DOM manipulation
-  - Debounced scroll events
-  - Minimized render-blocking resources
+## 🛠️ Tech Stack
 
-## 🛠️ Technology Stack
+- **Frontend:**
+  - HTML5
+  - CSS3
+  - JavaScript (ES6+)
+  - Responsive Design
 
-### Frontend
-- HTML5 (Semantic markup)
-- CSS3 (Modern properties, Flexbox & Grid)
-- JavaScript (ES6+)
-- jQuery (DOM manipulation)
+- **Backend:**
+  - Node.js
+  - Express.js
+  - Text-to-Speech API integration
 
-### Libraries & Plugins
-- Particle.js (Background animation)
-- ScrollMagic (Scroll animations)
-- Isotope.js (Portfolio filtering)
-- Magnific Popup (Image lightbox)
-- Font Awesome 5 (Icons)
-- Google Fonts (Typography)
-- Web3Forms (Form handling)
-- Web Speech API (Text-to-Speech)
+## 📦 Installation
 
-### Performance Tools
-- Lazy Loading
-- Resource Prioritization
-- Progressive Loading
-- Script Optimization
-- Image Optimization
-- CSS Minification
-- Cache Management
+1. Clone the repository:
+```bash
+git clone https://github.com/Ninja-Coder-ui/Portfolio-2.0.git
+```
 
-### Development Tools
-- Git (Version control)
-- VS Code (Code editor)
-- Chrome DevTools (Testing)
-- Vercel (Hosting)
+2. Navigate to the project directory:
+```bash
+cd Portfolio-2.0
+```
 
-## 🚀 Latest Updates
+3. Install dependencies:
+```bash
+# Install backend dependencies
+cd backend
+npm install
 
-- Implemented performance optimizations
-- Added lazy loading for resources
-- Optimized script loading and initialization
-- Removed duplicate dependencies
-- Enhanced loading speed
-- Improved mobile responsiveness
-- Added progressive component loading
-- Enhanced error handling
-- Optimized image loading
-- Improved overall site performance
+# Install frontend dependencies
+cd ../frontend
+npm install
+```
 
-## 🔗 Important Links
+4. Start the development server:
+```bash
+# Start backend server
+cd backend
+npm run dev
 
-- **Live Website**: [ninjacoder.vercel.app](https://ninjacoder.vercel.app/)
-- **Repository**: [GitHub](https://github.com/Ninja-Coder-ui/portfolio)
-- **Issues**: [Bug Reports](https://github.com/Ninja-Coder-ui/portfolio/issues)
+# The frontend will be served at http://localhost:3000
+```
 
-## 📞 Contact Information
+## 🏗️ Project Structure
 
-- **Portfolio**: [ninjacoder.vercel.app](https://ninjacoder.vercel.app)
-- **LinkedIn**: [Raj Raushan](https://www.linkedin.com/in/coderninja/)
-- **GitHub**: [@Ninja-Coder-ui](https://github.com/Ninja-Coder-ui)
-- **Twitter**: [@Raj_Raushan_](https://twitter.com/Raj_Raushan_)
+```
+Portfolio-2.0/
+├── frontend/
+│   ├── css/
+│   ├── js/
+│   ├── img/
+│   ├── Achievements/
+│   └── index.html
+├── backend/
+│   ├── server.js
+│   └── package.json
+└── .github/
+    └── workflows/
+        └── deploy.yml
+```
 
-## 📄 License
+## 🔧 Configuration
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+The project uses environment variables for configuration. Create a `.env` file in the backend directory with the following variables:
+
+```env
+PORT=3000
+```
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-## 💫 Acknowledgments
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-Special thanks to:
-- Particle.js community
-- Font Awesome team
-- Google Fonts
-- Web3Forms team
-- All contributors and supporters
+## 📝 License
 
-## 📊 Performance Metrics
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-- Improved page load time
-- Enhanced First Contentful Paint (FCP)
-- Optimized Largest Contentful Paint (LCP)
-- Reduced Time to Interactive (TTI)
-- Better Core Web Vitals scores
+## 👤 Author
 
----
-<p align="center">Designed & Developed with ❤️ by Raj Raushan (Ninja Coder)</p>
+Ninja Coder UI
+- GitHub: [@Ninja-Coder-ui](https://github.com/Ninja-Coder-ui)
+
+## 🙏 Acknowledgments
+
+- Icons from [Font Awesome](https://fontawesome.com/)
+- Images from [Unsplash](https://unsplash.com/)
+- Text-to-Speech functionality powered by Google Text-to-Speech API 
